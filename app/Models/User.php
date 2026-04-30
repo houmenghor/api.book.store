@@ -7,6 +7,8 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -28,5 +30,26 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    protected $fillable = [
+        'full_name',
+        'email',
+        'password',
+        'role_id',
+        'status',
+        'verification_token',
+        'email_verified_at',
+        'verification_token_expires_at',
+    ];
+
+    public function role(): HasMany
+    {
+        return $this->hasMany(Role::class, 'role_id', 'id');
+    }
+
+    public function userProfile(): HasOne
+    {
+        return $this->hasOne(UserProfile::class,'user_id', 'id');
     }
 }

@@ -2,14 +2,15 @@
 namespace App\Helpers;
 trait ApiResponse
 {
-    function success(mixed $data, string $message)
+    public function success(string $message, mixed $data = null)
     {
         $response = [];
         $response['status'] = 'success';
         $response['message'] = $message;
-        if (is_null($data)) {
+        if (! is_null($data)) {
             $response['data'] = $data;
         }
+
         return response()->json($response, 200);
     }
 
