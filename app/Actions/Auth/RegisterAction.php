@@ -2,13 +2,9 @@
 
 namespace App\Actions\Auth;
 
-use App\Mail\VerifyEmail;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use SensitiveParameter;
-use Str;
-use function Illuminate\Support\now;
 
 class RegisterAction
 {

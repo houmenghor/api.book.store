@@ -5,7 +5,7 @@ namespace App\Actions\Auth;
 use App\Mail\VerifyEmail;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
-use Str;
+use Illuminate\Support\Str;
 
 class SendVerificationEmailAction
 {

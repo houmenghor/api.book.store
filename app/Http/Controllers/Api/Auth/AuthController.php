@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Actions\Auth\LoginAction;
 use App\Actions\Auth\RegisterAction;
 use App\Actions\Auth\ResendVerificationAction;
 use App\Actions\Auth\VerifyEmailAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\SendEmailRequest;
 use Illuminate\Http\Request;
@@ -17,6 +19,14 @@ class AuthController extends Controller
         $user = $req->validated();
         $response = $action->handle($user, $user['password']);
         return $this->success("Registration successful! Please check your email to verify your account.", $response);
+    }
+
+    public function login(LoginRequest $req, LoginAction $action)
+    {
+        $user = $req->validated();
+        $response = $action->handle($user['email'], $user['password']);
+
+        return $this->success("Login successful!", $response);
     }
 
     public function verifyEmail(Request $req, VerifyEmailAction $action, string $token)
