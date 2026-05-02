@@ -2,14 +2,17 @@
 
 namespace App\Helpers;
 
-use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ValidationHelper
 {
-    public static function throwValidation(string $field, string $message)
+    public static function throwError(string $message = 'Invalid credentials.', int $statusCode = 401)
     {
-        throw ValidationException::withMessages([
-            $field => [$message],
-        ]);
+        throw new HttpResponseException(
+            response()->json([
+                'status' => 'error',
+                'message' => $message,
+            ], $statusCode)
+        );
     }
 }
