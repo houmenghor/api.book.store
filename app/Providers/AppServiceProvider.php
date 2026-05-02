@@ -23,7 +23,8 @@ class AppServiceProvider extends ServiceProvider
         Passport::enablePasswordGrant();
         Passport::tokensExpireIn(now()->addMinutes(1));
         // The Refresh Token: How long they have to get a new Access Token without logging in
-        Passport::refreshTokensExpireIn(now()->addDays(30));
+        // Passport::refreshTokensExpireIn(now()->addDays(30));
+        Passport::refreshTokensExpireIn(now()->addMinutes(2));
         // Personal Access Tokens (optional)
         Passport::personalAccessTokensExpireIn(now()->addMonths(6));
     }
