@@ -27,15 +27,16 @@ class RefreshTokenAction
         // Decode the response
         $data = json_decode($response->getContent(), true);
 
-        if (isset($data['error'])) {
-            ValidationHelper::throwError('Authentication failed.', 401);
+        if ($response->getStatusCode() >= 400) {
+            $message = $data['message'] ?? $data['error_description'] ?? 'Invalid refresh token.';
+            ValidationHelper::throwError($message, 401);
         }
-
+        
         return [        
-            'message'       => "Token refreshed successfully!",
-            'access_token'  => $data['access_token'],
             'token_type'    => $data['token_type'],
             'expires_in'    => $data['expires_in'],
+            'access_token'  => $data['access_token'],
+            'refresh_token' => $data['refresh_token'],
         ];
     }
 }
