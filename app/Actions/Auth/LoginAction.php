@@ -59,7 +59,8 @@ class LoginAction
         $data = json_decode($response->getContent(), true);
 
         if ($response->getStatusCode() >= 400) {
-            ValidationHelper::throwError('Authentication failed.', 401);
+            $errorMessage = $data['message'] ?? $data['error_description'] ?? 'Authentication failed.';
+            ValidationHelper::throwError($errorMessage, 401);
         }
 
         return [
