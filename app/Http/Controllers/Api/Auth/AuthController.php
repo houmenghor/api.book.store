@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Actions\Auth\LoginAction;
+use App\Actions\Auth\LogoutAction;
 use App\Actions\Auth\RefreshTokenAction;
 use App\Actions\Auth\RegisterAction;
 use App\Actions\Auth\ResendVerificationAction;
@@ -16,24 +17,31 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    public function register(RegisterRequest $req, RegisterAction $action)
+    public function register(RegisterRequest $request, RegisterAction $action)
     {
-        $user = $req->validated();
+        $user = $request->validated();
         $response = $action->handle($user, $user['password']);
         return $this->success("Registration successful! Please check your email to verify your account.", $response);
     }
 
-    public function login(LoginRequest $req, LoginAction $action)
+    public function login(LoginRequest $request, LoginAction $action)
     {
-        $user = $req->validated();
+        $user = $request->validated();
         $response = $action->handle($user['email'], $user['password']);
 
         return $this->success("Login successful!", $response);
     }
 
-    public function verifyEmail(Request $req, VerifyEmailAction $action, string $token)
+    public function logout(Request $request, LogoutAction $action)
     {
-        $email = $req->query('email');
+    
+        $action->handle($request);
+        return $this->success("Logout successful!");
+    }
+
+    public function verifyEmail(Request $request, VerifyEmailAction $action, string $token)
+    {
+        $email = $request->query('email');
         $user = $action->handle($email, $token);
         $frontendUrl = config('app.frontend_url', 'http://localhost:3000');
         if (!$user) {
@@ -43,16 +51,16 @@ class AuthController extends Controller
         return redirect("{$frontendUrl}/verify-email?status=success");
     }
 
-    public function resendVerification(ResendVerificationAction $action, SendEmailRequest $req)
+    public function resendVerification(ResendVerificationAction $action, SendEmailRequest $request)
     {
-        $data = $req->validated();
+        $data = $request->validated();
         $action->handle($data['email']);
         return $this->success("Verification email resent! Please check your email.");
     }
 
-    public function refresh(RefreshTokenRequest $req, RefreshTokenAction $action)
+    public function refresh(RefreshTokenRequest $request, RefreshTokenAction $action)
     {
-        $data = $req->validated();
+        $data = $request->validated();
         $response = $action->handle($data['refresh_token']);
         return $this->success("Token refreshed successfully!", $response);
         
