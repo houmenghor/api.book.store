@@ -15,5 +15,6 @@ Route::prefix('v1/')->group(function () {
         Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail']);
         Route::post('/resend-verification', [AuthController::class, 'resendVerification']);
         Route::post('/refresh', [AuthController::class, 'refresh']);
+        Route::middleware('auth:api')->post('/logout', [AuthController::class, 'logout']);
     });
 });
