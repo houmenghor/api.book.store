@@ -15,5 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (\Illuminate\Database\QueryException $e) {
+        return response()->json([
+            'message' => 'Database error: Ensure all related data (like Roles) exists.',
+            'debug' => config('app.debug') ? $e->getMessage() : null
+        ], 500);
+    });
     })->create();
