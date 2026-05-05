@@ -6,14 +6,20 @@ use App\Actions\Auth\LoginAction;
 use App\Actions\Auth\LogoutAction;
 use App\Actions\Auth\Oauth\GoogleCallbackAction;
 use App\Actions\Auth\Oauth\GoogleRedirectAction;
+use App\Actions\Auth\ForgotPasswordAction;
+use App\Actions\Auth\Otp\VerifyOtpAction;
 use App\Actions\Auth\RefreshTokenAction;
 use App\Actions\Auth\RegisterAction;
 use App\Actions\Auth\ResendVerificationAction;
+use App\Actions\Auth\ResetPasswordAction;
 use App\Actions\Auth\VerifyEmailAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\OtpCodeRequest;
 use App\Http\Requests\Auth\RefreshTokenRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Requests\Auth\SendEmailRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
@@ -37,7 +43,6 @@ class AuthController extends Controller
 
     public function logout(Request $request, LogoutAction $action)
     {
-
         $action->handle($request);
         return $this->success("Logout successful!");
     }
@@ -84,5 +89,26 @@ class AuthController extends Controller
             'token_type'   => $response['token_type'],
             'expires_at'   => $response['expires_at'],
         ]);
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request, ForgotPasswordAction $action)
+    {
+        $data = $request->validated();
+        $action->handle($data['email'], $data['purpose']);
+        return $this->success('Otp sent successfully!');
+    }
+
+    public function verifyOtp(OtpCodeRequest $request, VerifyOtpAction $action) 
+    {
+        $data = $request->validated();
+        $response = $action->handle($data['email'], $data['code'], $data['purpose']);
+        return $this->success('Otp verified', ['reset_token' => $response]);
+    }
+
+    public function resetPassword(ResetPasswordRequest $request, ResetPasswordAction $action)
+    {
+        $request = $request->validated();
+        $action->handle($request['email'], $request['token'], $request['new_password']);
+        return $this->success('Password reset successfully!');
     }
 }
