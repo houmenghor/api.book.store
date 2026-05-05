@@ -19,7 +19,8 @@ class RegisterAction
                 "email" => $data["email"],
                 "password" => Hash::make($password),
                 "role_id" => 2,
-                "status" => false
+                "status" => false,
+                'pending_email' => null
             ]);
 
             $user->userProfile()->create([

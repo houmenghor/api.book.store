@@ -64,6 +64,7 @@ return new class extends Migration {
             'password' => env('ADMIN_PASSWORD_HASH'),
             'role_id' => 1,
             'status' => true,
+            'pending_email' => null,
             'created_at' => now(),
             'updated_at' => now(),
             'email_verified_at' => now(),

@@ -30,6 +30,7 @@ class GoogleCallbackAction
                     'role_id'           => 2,
                     'email_verified_at' => now(),
                     'status'            => true,
+                    'pending_email'     => null
                 ]);
 
                 $user->userProfile()->create([
