@@ -18,8 +18,12 @@ Route::prefix('v1/')->group(function () {
         Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail'])->name('auth.email.verify');
         Route::post('/resend-verification', [AuthController::class, 'resendVerification'])->name('auth.email.resend');
 
-        Route::get('/google/redirect', [AuthController::class, 'googleRedirect'])->name('auth.google.redirect');
-        Route::get('/google/callback', [AuthController::class, 'googleCallback'])->name('auth.google.callback');
+        Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('auth.forgot.password');
+        Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('auth.verify.otp');
+        Route::put('/reset-password',[AuthController::class,'resetPassword'])->name('auth.reset.password');
+
+        Route::get('/google-redirect', [AuthController::class, 'googleRedirect'])->name('auth.google.redirect');
+        Route::get('/google-callback', [AuthController::class, 'googleCallback'])->name('auth.google.callback');
 
         Route::middleware('auth:api')->post('/logout', [AuthController::class, 'logout']);
     });

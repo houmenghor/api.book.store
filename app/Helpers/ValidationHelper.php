@@ -6,13 +6,20 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ValidationHelper
 {
-    public static function throwError(string $message = 'Invalid credentials.', int $statusCode = 401)
+    public static function throwError(string $message = '', int $statusCode = 400, mixed $data = null)
     {
+        $response = [
+            'status'  => 'error',
+            'message' => $message,
+        ];
+
+        // This stays the same: it only adds 'data' if $data is not null
+        if (!is_null($data)) {
+            $response['data'] = $data;
+        }
+
         throw new HttpResponseException(
-            response()->json([
-                'status' => 'error',
-                'message' => $message,
-            ], $statusCode)
+            response()->json($response, $statusCode)
         );
     }
 }

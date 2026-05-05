@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\OtpCode;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -10,7 +11,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class VerifyEmail extends Mailable implements ShouldQueue
+class SendOtp extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -18,10 +19,12 @@ class VerifyEmail extends Mailable implements ShouldQueue
      * Create a new message instance.
      */
     public function __construct(
-        public string $verificationUrl,
-        public ?string $full_name = null,
-    )
+        public OtpCode $otpCode,
+        public string $full_name,
+        public string $code
+        )
     {
+        //
     }
 
     /**
@@ -29,8 +32,13 @@ class VerifyEmail extends Mailable implements ShouldQueue
      */
     public function envelope(): Envelope
     {
+        $subject = match($this->otpCode->purpose) {
+            'change_email' => 'Confirm Your New Email Address',
+            'reset_password' => 'Your Password Reset Code',
+            default => 'Your Verification Code',
+        };
         return new Envelope(
-            subject: 'Verify Your Email Address',
+            subject: $subject,
         );
     }
 
@@ -40,10 +48,12 @@ class VerifyEmail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.verify-email',
+            view: 'emails.otp',
             with: [
-                'full_name' => $this->full_name,
-                'verificationUrl' => $this->verificationUrl,
+                'purpose' => $this->otpCode->purpose,
+                'code' => $this->code,
+                'expires_at' => $this->otpCode->expires_at,
+                'full_name' => $this->full_name
             ]
         );
     }
