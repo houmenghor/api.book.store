@@ -21,11 +21,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Passport::enablePasswordGrant();
-        Passport::tokensExpireIn(now()->addMinutes(1));
+        Passport::tokensExpireIn(now()->addMinutes(60));
         // The Refresh Token: How long they have to get a new Access Token without logging in
-        // Passport::refreshTokensExpireIn(now()->addDays(30));
-        Passport::refreshTokensExpireIn(now()->addMinutes(2));
-        // Personal Access Tokens (optional)
-        Passport::personalAccessTokensExpireIn(now()->addMonths(6));
+        Passport::refreshTokensExpireIn(now()->addDays(30));
+        // Personal Access Tokens for third-party oauth
+        Passport::personalAccessTokensExpireIn(now()->addDays(14));
     }
 }

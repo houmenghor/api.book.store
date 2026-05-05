@@ -10,11 +10,17 @@ Route::get('/user', function (Request $request) {
 
 Route::prefix('v1/')->group(function () {
     Route::prefix('/auth')->group(function () {
-        Route::post('/register', [AuthController::class, 'register']);
-        Route::post('/login', [AuthController::class, 'login']);
-        Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail']);
-        Route::post('/resend-verification', [AuthController::class, 'resendVerification']);
-        Route::post('/refresh', [AuthController::class, 'refresh']);
+
+        Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
+        Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
+        Route::post('/refresh', [AuthController::class, 'refresh'])->name('auth.token.refresh');
+
+        Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail'])->name('auth.email.verify');
+        Route::post('/resend-verification', [AuthController::class, 'resendVerification'])->name('auth.email.resend');
+
+        Route::get('/google/redirect', [AuthController::class, 'googleRedirect'])->name('auth.google.redirect');
+        Route::get('/google/callback', [AuthController::class, 'googleCallback'])->name('auth.google.callback');
+
         Route::middleware('auth:api')->post('/logout', [AuthController::class, 'logout']);
     });
 });
