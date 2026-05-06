@@ -10,10 +10,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
-    {
-        
-    }
+    public function register(): void {}
 
     /**
      * Bootstrap any application services.
@@ -26,5 +23,9 @@ class AppServiceProvider extends ServiceProvider
         Passport::refreshTokensExpireIn(now()->addDays(30));
         // Personal Access Tokens for third-party oauth
         Passport::personalAccessTokensExpireIn(now()->addDays(14));
+        Passport::tokensCan([
+            'admin' => 'Access administrator backend',
+            'user'  => 'Access standard user features',
+        ]);
     }
 }

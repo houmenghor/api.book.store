@@ -15,7 +15,7 @@ class LoginAction
 
     public function handle(string $email, #[SensitiveParameter] string $password): array
     {
-        $user = User::query()->where("email", $email)->first();
+        $user = User::query()->with('role')->where("email", $email)->first();
         // dd($user);
         if (!$user) {
             ValidationHelper::throwError('User with this email does not exist.', 401);
@@ -24,6 +24,10 @@ class LoginAction
         if (!Hash::check($password, $user->password)) {
             ValidationHelper::throwError('Invalid credentials.', 401);
         }
+
+        // if ($user->role->name !== 'admin') {
+        //     ValidationHelper::throwError('You do not have permission to access', 403);
+        // }
 
         if ($user->status == false) {
 
@@ -34,10 +38,10 @@ class LoginAction
             );
         }
 
-        return $this->issueToken($email, $password);
+        return $this->issueToken($user, $email, $password);
     }
 
-    protected function issueToken(string $email, string $password): array
+    protected function issueToken(User $user, string $email, string $password): array
     {
         // 1. Prepare the credentials
         $params = [
@@ -46,7 +50,7 @@ class LoginAction
             'client_secret' => config('services.passport.client_secret'),
             'username'      => $email,
             'password'      => $password,
-            'scope'         => '',
+            'scope'         => $user->role->name,
         ];
 
         // 2. Create an INTERNAL request (Very readable!)
@@ -65,6 +69,7 @@ class LoginAction
 
         return [
             'email'         => $email,
+            'role'          => $user->role->name,
             'token_type'    => $data['token_type'],
             'expires_in'    => $data['expires_in'],
             'access_token'  => $data['access_token'],
