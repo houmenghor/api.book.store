@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
@@ -13,7 +14,7 @@ return new class extends Migration {
         Schema::create('user_profiles', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->unique();
-            $table->boolean('gender')->default(false)->nullable();
+            $table->tinyInteger('gender')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('phone_number', 14)->nullable();
             $table->string('address')->nullable();
@@ -22,6 +23,19 @@ return new class extends Migration {
 
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
         });
+
+        DB::table('user_profiles')->updateOrInsert(
+            ['user_id' => 1],
+            [
+                'gender' => null,
+                'date_of_birth' => null,
+                'phone_number' => null,
+                'address' => null,
+                'thumbnail' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
     }
 
     /**

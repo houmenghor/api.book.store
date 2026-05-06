@@ -10,7 +10,9 @@
         "laravel/framework": "^13.0",
         "laravel/passport": "^13.0",
         "laravel/socialite": "^5.27",
+        "laravel/telescope": "^5.20",
         "laravel/tinker": "^3.0",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "nyholm/psr7": "^1.8",
         "resend/resend-php": "^1.3"
     },

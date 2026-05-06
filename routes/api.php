@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,8 +36,8 @@ Route::prefix('v1/')->group(function () {
 
         // Profile / Me Routes
         Route::prefix('/me')->group(function () {
-            // Route::get('/', [ProfileController::class, 'show']);
-            // Route::put('/update', [ProfileController::class, 'update']); 
+            Route::get('/', [ProfileController::class, 'show'])->name('me.profile.show');
+            Route::post('/', [ProfileController::class, 'update'])->name('me.profile.update'); 
             // Route::post('/change-email', [ProfileController::class, 'changeEmail']);
             // Route::post('/change-password', [ProfileController::class, 'changePassword']);
         });

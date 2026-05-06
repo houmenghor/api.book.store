@@ -25,6 +25,7 @@ return new class extends Migration {
             $table->string('password')->nullable();
             $table->unsignedBigInteger('role_id')->default(2);
             $table->boolean('status')->default(false);
+            $table->string('pending_email')->nullable();
             $table->string('verification_token')->nullable();
             $table->timestamp('verification_token_expires_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();
@@ -70,14 +71,6 @@ return new class extends Migration {
             'email_verified_at' => now(),
         ]);
 
-        // DB::table('user_profiles')->updateOrInsert([
-        //     'user_id' => 1,
-        //     'gender' => null,
-        //     'date_of_birth' => null,
-        //     'phone_number' => null ,
-        //     'address' => null,
-        //     'thumbnail' => null
-        // ]);
     }
 
     /**
